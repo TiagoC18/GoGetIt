@@ -5,9 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,9 +23,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(navController: NavController, cartItems: List<MenuItem>) {
+fun CartScreen(navController: NavController, cartItems: MutableMap<MenuItem, Int>, onProceedToCheckout: () -> Unit) {
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Cart") },
+                actions = {
+                    IconButton(onClick = { navController.navigate("login") }) {
+                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out")
+                    }
+                }
+            )
+        },
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
@@ -61,33 +76,37 @@ fun CartScreen(navController: NavController, cartItems: List<MenuItem>) {
         },
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
-                Text(
-                    text = "Cart",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    ),
-                    modifier = Modifier.padding(16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
                 LazyColumn {
-                    items(cartItems) { menuItem ->
-                        CartItemCard(menuItem = menuItem)
+                    items(cartItems.entries.toList()) { entry ->
+                        CartItemCard(
+                            menuItem = entry.key,
+                            quantity = entry.value,
+                            onIncreaseQuantity = {
+                                cartItems[entry.key] = cartItems.getOrDefault(entry.key, 0) + 1
+                            },
+                            onDecreaseQuantity = {
+                                val currentQuantity = cartItems[entry.key]!!
+                                if (currentQuantity > 1) {
+                                    cartItems[entry.key] = currentQuantity - 1
+                                } else {
+                                    cartItems.remove(entry.key)
+                                }
+                            },
+                            onRemoveItem = {
+                                cartItems.remove(entry.key)
+                            }
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = {
-                        // Handle place order action
-                    },
+                    onClick = onProceedToCheckout,
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    Text(text = "Place Order")
+                    Text(text = "Proceed to Checkout")
                 }
             }
         }
@@ -95,7 +114,13 @@ fun CartScreen(navController: NavController, cartItems: List<MenuItem>) {
 }
 
 @Composable
-fun CartItemCard(menuItem: MenuItem) {
+fun CartItemCard(
+    menuItem: MenuItem,
+    quantity: Int,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
+    onRemoveItem: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,6 +157,22 @@ fun CartItemCard(menuItem: MenuItem) {
                     text = menuItem.price,
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                 )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row {
+                    IconButton(onClick = onDecreaseQuantity) {
+                        Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Decrease")
+                    }
+                    Text(text = "$quantity", modifier = Modifier.align(Alignment.CenterVertically))
+                    IconButton(onClick = onIncreaseQuantity) {
+                        Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Increase")
+                    }
+                }
+            }
+
+            IconButton(onClick = onRemoveItem) {
+                Icon(Icons.Filled.Delete, contentDescription = "Remove")
             }
         }
     }

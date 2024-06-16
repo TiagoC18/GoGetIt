@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,9 +17,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 
 @Composable
-fun RestaurantDetailScreen(navController: NavController, restaurant: Restaurant, menuItems: List<MenuItem>) {
+fun RestaurantDetailScreen(
+    navController: NavController,
+    restaurant: Restaurant,
+    onAddToCart: (MenuItem) -> Unit
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -58,13 +66,14 @@ fun RestaurantDetailScreen(navController: NavController, restaurant: Restaurant,
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
                 Text(
                     text = restaurant.name,
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.padding(16.dp)
                 )
@@ -72,9 +81,19 @@ fun RestaurantDetailScreen(navController: NavController, restaurant: Restaurant,
                 Spacer(modifier = Modifier.height(8.dp))
 
                 LazyColumn {
-                    items(menuItems) { menuItem ->
+                    items(restaurant.menu) { menuItem ->
                         MenuItemCard(menuItem = menuItem) {
-                            // Handle add to cart action
+                            onAddToCart(menuItem)
+                            coroutineScope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = "${menuItem.name} added to cart",
+                                    actionLabel = "Go to Cart",
+                                    duration = SnackbarDuration.Short
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    navController.navigate("cart")
+                                }
+                            }
                         }
                     }
                 }
@@ -111,7 +130,7 @@ fun MenuItemCard(menuItem: MenuItem, onAddToCartClick: () -> Unit) {
                     text = menuItem.name,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 

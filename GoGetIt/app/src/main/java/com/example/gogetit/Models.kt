@@ -6,7 +6,8 @@ data class Restaurant(
     val name: String,
     @DrawableRes val image: Int,
     val rating: Float,
-    val deliveryTime: String
+    val deliveryTime: String,
+    val menu: List<MenuItem>
 )
 
 data class MenuItem(

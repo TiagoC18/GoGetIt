@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -20,9 +21,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController, restaurants: List<Restaurant>) {
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Home") },
+                actions = {
+                    IconButton(onClick = { navController.navigate("login") }) {
+                        Icon(Icons.Filled.ExitToApp, contentDescription = "Log Out")
+                    }
+                }
+            )
+        },
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
@@ -66,7 +78,7 @@ fun MainScreen(navController: NavController, restaurants: List<Restaurant>) {
                     text = "Open Restaurants",
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.padding(16.dp)
                 )
@@ -112,8 +124,8 @@ fun RestaurantItem(restaurant: Restaurant, onClick: () -> Unit) {
                     text = restaurant.name,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
+                        color = MaterialTheme.colorScheme.onBackground
+                                )
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
