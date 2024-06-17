@@ -10,16 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-data class Order(val id: String, val description: String)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController) {
-    val orders = remember {
-        listOf(
-            Order(id = "1", description = "Order 1: Pizza from Restaurant A"),
-            Order(id = "2", description = "Order 2: Burger from Restaurant B")
-        )
+    // Obter a lista de pedidos do OrderRepository
+    val orders by remember { derivedStateOf { OrderRepository.orders } }
+
+    // Iniciar a escuta de novos pedidos
+    LaunchedEffect(Unit) {
+        OrderRepository.listenForNewOrders()
     }
 
     Scaffold(
@@ -38,7 +37,7 @@ fun MainScreen(navController: NavController) {
                             }
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = order.description, style = MaterialTheme.typography.bodyLarge)
+                            Text(text = "Order ${order.id}: ${order.restaurantName}", style = MaterialTheme.typography.bodyLarge)
                         }
                     }
                 }

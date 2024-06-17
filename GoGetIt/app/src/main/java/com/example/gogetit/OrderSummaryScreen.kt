@@ -1,5 +1,6 @@
 package com.example.gogetit
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,10 +44,10 @@ fun OrderSummaryScreen(
     var paymentMethod by remember { mutableStateOf("") }
     var cardNumber by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    var showFailureDialog by remember { mutableStateOf(false) }
 
-    val totalCost = cartItems.entries.sumOf { (item, quantity) ->
-        item.price.removePrefix("$").toDouble() * quantity
-    }
+    val totalCost = cartItems.entries.sumOf { it.key.price.removePrefix("$").toDouble() * it.value }
 
     Scaffold(
         topBar = {
@@ -160,8 +162,25 @@ fun OrderSummaryScreen(
 
                 Button(
                     onClick = {
-                        // Handle order placement
-                        onPlaceOrder()
+                        val order = Order(
+                            id = "some_unique_id",
+                            restaurantName = "Restaurant Name",
+                            restaurantLocation = Location(40.7128, -74.0060), // Exemplo de coordenadas
+                            clientLocation = Location(40.730610, -73.935242), // Exemplo de coordenadas
+                            items = cartItems.entries.map { OrderMenuItem(it.key.name, it.key.price.removePrefix("$").toDouble()) },
+                            totalPrice = totalCost
+                        )
+                        Log.d("OrderSummaryScreen", "Tentando enviar pedido para a base de dados")
+                        OrderRepository.sendOrderToDatabase(order,
+                            onSuccess = {
+                                Log.d("OrderSummaryScreen", "Pedido enviado com sucesso")
+                                showSuccessDialog = true
+                            },
+                            onFailure = {
+                                Log.e("OrderSummaryScreen", "Falha ao enviar o pedido")
+                                showFailureDialog = true
+                            }
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium
@@ -171,6 +190,39 @@ fun OrderSummaryScreen(
             }
         }
     )
+
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = { showSuccessDialog = false },
+            title = { Text("Success") },
+            text = { Text("Order placed successfully!") },
+            confirmButton = {
+                Button(onClick = {
+                    showSuccessDialog = false
+                    navController.navigate("main") {
+                        popUpTo("main") { inclusive = true }
+                    }
+                }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
+    if (showFailureDialog) {
+        AlertDialog(
+            onDismissRequest = { showFailureDialog = false },
+            title = { Text("Failure") },
+            text = { Text("Failed to place the order. Please try again.") },
+            confirmButton = {
+                Button(onClick = {
+                    showFailureDialog = false
+                }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 }
 
 @Composable

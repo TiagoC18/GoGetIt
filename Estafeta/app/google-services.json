@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1074816670767",
+    "firebase_url": "https://gogetit-426601-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "gogetit-426601",
+    "storage_bucket": "gogetit-426601.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074816670767:android:172beb343dfd75b5f13ada",
+        "android_client_info": {
+          "package_name": "com.example.estafeta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqMWRhWl5BYxWw0GXUytB_js1tbYOIhzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074816670767:android:5346724f3d712af7f13ada",
+        "android_client_info": {
+          "package_name": "com.example.gogetit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqMWRhWl5BYxWw0GXUytB_js1tbYOIhzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

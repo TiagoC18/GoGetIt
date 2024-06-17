@@ -19,7 +19,9 @@ fun NavGraph(navController: NavHostController) {
         }
         composable("orderDetail/{orderId}") { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId")
-            OrderDetailScreen(navController, orderId)
+            if (orderId != null) {
+                OrderDetailScreen(navController, orderId)
+            }
         }
         composable("pickupMap/{orderId}") { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId")

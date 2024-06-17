@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
 import com.example.estafeta.ui.theme.EstafetaTheme
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +20,8 @@ class MainActivity : ComponentActivity() {
                     NavGraph(navController = navController)
                 }
             }
+            OrderRepository.listenForNewOrders()
         }
+        Firebase.database
     }
 }
