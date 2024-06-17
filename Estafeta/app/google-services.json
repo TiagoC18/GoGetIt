@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "346580452292",
+    "project_id": "estafeta-a30d4",
+    "storage_bucket": "estafeta-a30d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346580452292:android:9235fd7b6ca8926cc29a91",
+        "android_client_info": {
+          "package_name": "com.example.estafeta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh-jhVGU6N4I8joQvGrePerYS-ihNSo_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
