@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -17,19 +19,44 @@ fun NavGraph(navController: NavHostController) {
         composable("main") {
             MainScreen(navController)
         }
-        composable("orderDetail/{orderId}") { backStackEntry ->
+        composable(
+            "orderDetail/{orderId}/{latitude}/{longitude}",
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("latitude") { type = NavType.FloatType },
+                navArgument("longitude") { type = NavType.FloatType }
+            )
+        ) { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId")
-            if (orderId != null) {
-                OrderDetailScreen(navController, orderId)
-            }
+            val latitude = backStackEntry.arguments?.getFloat("latitude")?.toDouble()
+            val longitude = backStackEntry.arguments?.getFloat("longitude")?.toDouble()
+            OrderDetailScreen(navController, orderId, latitude, longitude)
         }
-        composable("pickupMap/{orderId}") { backStackEntry ->
+        composable(
+            "pickupMap/{orderId}/{latitude}/{longitude}",
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("latitude") { type = NavType.FloatType },
+                navArgument("longitude") { type = NavType.FloatType }
+            )
+        ) { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId")
-            PickupMapScreen(navController, orderId)
+            val latitude = backStackEntry.arguments?.getFloat("latitude")?.toDouble()
+            val longitude = backStackEntry.arguments?.getFloat("longitude")?.toDouble()
+            PickupMapScreen(navController, orderId, latitude, longitude)
         }
-        composable("deliveryMap/{orderId}") { backStackEntry ->
+        composable(
+            "deliveryMap/{orderId}/{latitude}/{longitude}",
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("latitude") { type = NavType.FloatType },
+                navArgument("longitude") { type = NavType.FloatType }
+            )
+        ) { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId")
-            DeliveryMapScreen(navController, orderId)
+            val latitude = backStackEntry.arguments?.getFloat("latitude")?.toDouble()
+            val longitude = backStackEntry.arguments?.getFloat("longitude")?.toDouble()
+            DeliveryMapScreen(navController, orderId, latitude, longitude)
         }
     }
 }

@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
             }
             OrderRepository.listenForNewOrders()
         }
+        //setContentView(R.layout.fragment_map)
         Firebase.database
     }
 }

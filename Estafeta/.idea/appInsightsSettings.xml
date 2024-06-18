@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.estafeta" />
-                  <option name="mobileSdkAppId" value="1:346580452292:android:9235fd7b6ca8926cc29a91" />
-                  <option name="projectId" value="estafeta-a30d4" />
-                  <option name="projectNumber" value="346580452292" />
+                  <option name="mobileSdkAppId" value="1:1074816670767:android:172beb343dfd75b5f13ada" />
+                  <option name="projectId" value="gogetit-426601" />
+                  <option name="projectNumber" value="1074816670767" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
